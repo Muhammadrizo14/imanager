@@ -10,17 +10,18 @@ const mainUrl = 'https://api.unsplash.com/photos/'
 // const searchUrl = 'https://api.unsplash.com/search/photos/'
 function App() {
   const [loading, setLoading] = useState(false)
-  const [photos, setPhotos] = useState([])
+  const [photos, setPhotos] = useState<any[]>([])
+  const [page, setPage] = useState(1)
   const fetchImages = () => {
     setLoading(true)
     let url;
-    url = `${mainUrl}${clientID}`
+    const urlPage = `&page=${page}`
+    url = `${mainUrl}${clientID}${urlPage}`
     axios
       .get(url)
       .then(res => {
         setLoading(false)
-        setPhotos(res.data)
-        console.log(res)
+        setPhotos((prev) => [...prev, ...res.data])
       })
       .catch(err => {
         setLoading(false)
@@ -29,15 +30,22 @@ function App() {
   }
 
 
-  // const handleSubmit = (e:React.FormEvent<HTMLFormElement> ) => {
-  //   e.preventDefault()
-  //   console.log(44)
-  // }
+  useEffect(() => {
+      const event  = window.addEventListener('scroll', () => {
+          if (!loading && window.innerHeight + window.scrollY >= document.body.scrollHeight) {
+            setPage(prev => prev + 1)
+          }
+        });
+
+      return () => window.removeEventListener('scroll', ()=> event)
+    },
+    []);
+
 
 
   useEffect(() => {
     fetchImages()
-  }, []);
+  }, [page]);
   return (
     <main>
       <section className='search'>
@@ -56,8 +64,8 @@ function App() {
         <h2>Explore more images </h2>
 
         <div className="photos-center">
-          {photos.map((image: any) => (
-            <Photos key={image.id} {...image}/>
+          {photos.map((image: any, i) => (
+            <Photos key={i} {...image}/>
           ))}
         </div>
       </section>
