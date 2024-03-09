@@ -1,4 +1,4 @@
-import {ChangeEvent, useEffect, useState} from 'react'
+import React, {ChangeEvent, useEffect, useState} from 'react'
 import './App.scss'
 import axios from "axios";
 import Photos from "./components/Photos.tsx";
@@ -43,7 +43,7 @@ function App() {
       })
   }
 
-  const handleSubmit = (e)=> {
+  const handleSubmit = (e: React.MouseEvent<HTMLElement>)=> {
     e.preventDefault()
     setPage(1)
   }
@@ -77,7 +77,7 @@ function App() {
           <button
             type='submit'
             className='submit-btn'
-            onClick={handleSubmit}
+            onClick={(e:React.MouseEvent<HTMLElement>)=>handleSubmit(e)}
           >
             Search
           </button>
