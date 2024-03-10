@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useEffect, useState} from 'react'
+import React, {ChangeEvent, useEffect, useRef, useState} from 'react'
 import './App.scss'
 import axios from "axios";
 import Photos from "./components/Photos.tsx";
@@ -11,8 +11,11 @@ const searchUrl = 'https://api.unsplash.com/search/photos/'
 function App() {
   const [loading, setLoading] = useState(false)
   const [photos, setPhotos] = useState<any[]>([])
-  const [page, setPage] = useState(0)
+  const [page, setPage] = useState(1)
   const [query, setQuery] = useState('')
+  const [newImages, setNewImages] = useState(false)
+  const mounted = useRef(false)
+
   const fetchImages = () => {
     setLoading(true)
     let url;
@@ -21,14 +24,13 @@ function App() {
 
     if (query) {
       url = `${searchUrl}${clientID}${urlPage}${urlQuery}`
-    }else {
+    } else {
       url = `${mainUrl}${clientID}${urlPage}`
     }
 
     axios
       .get(url)
       .then(res => {
-        setLoading(false)
         if (query && page === 1) {
           setPhotos(res.data.results)
         } else if (query) {
@@ -36,29 +38,49 @@ function App() {
         } else {
           setPhotos((prev) => [...prev, ...res.data])
         }
+        setNewImages(false)
+        setLoading(false)
       })
       .catch(err => {
+        setNewImages(false)
         setLoading(false)
         console.log(err)
       })
   }
 
-  const handleSubmit = (e: React.MouseEvent<HTMLElement>)=> {
+  const handleSubmit = (e: React.MouseEvent<HTMLElement>) => {
     e.preventDefault()
+    if (!query) return
+    if (page === 1) {
+      fetchImages()
+    }
     setPage(1)
   }
 
+
+  const event = () => {
+    if (window.innerHeight + window.scrollY >= document.body.scrollHeight - 2) {
+      setNewImages(true)
+    }
+  }
+
+
   useEffect(() => {
-      const event = window.addEventListener('scroll', () => {
-        if (!loading && window.innerHeight + window.scrollY >= document.body.scrollHeight) {
-          setPage(prev => prev + 1)
-        }
-      });
+    window.addEventListener('scroll', event)
+    return () => window.removeEventListener('scroll', event)
+  }, []);
 
-      return () => window.removeEventListener('scroll', () => event)
-    },
-    []);
+  useEffect(() => {
+    if (!mounted.current) {
+      mounted.current = true
+      return
+    }
+    if (!newImages) return
+    if (loading) return
 
+    setPage(prev => prev + 1)
+
+  }, [newImages]);
 
   useEffect(() => {
     fetchImages()
@@ -71,13 +93,13 @@ function App() {
             type="text"
             placeholder={'search'}
             value={query}
-            onChange={(e:ChangeEvent<HTMLInputElement>) => setQuery(e.target.value)}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => setQuery(e.target.value)}
             className='form-input'
           />
           <button
             type='submit'
             className='submit-btn'
-            onClick={(e:React.MouseEvent<HTMLElement>)=>handleSubmit(e)}
+            onClick={(e: React.MouseEvent<HTMLElement>) => handleSubmit(e)}
           >
             Search
           </button>
