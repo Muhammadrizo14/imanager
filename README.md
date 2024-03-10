@@ -6,7 +6,7 @@
 
 ## Here you can
 * ### explore 
-* ### search (not yet)
+* ### search
 * ### safe (not yet)
 * ### download (not yet)
 
