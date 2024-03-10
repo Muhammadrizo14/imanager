@@ -7,7 +7,6 @@
 ## Here you can
 * ### explore 
 * ### search
-* ### safe (not yet)
 * ### download
 
 ## - Images
