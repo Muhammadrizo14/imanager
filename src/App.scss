@@ -2,6 +2,9 @@ main {
   max-width: 90%;
   margin: 0 auto;
   padding: 30px 0;
+  @media (max-width: 700px) {
+    max-width: 95%;
+  }
   .search {
     &-form {
       padding-bottom: 10px;
@@ -40,28 +43,45 @@ main {
         position: relative;
 
         img {
+          cursor: pointer;
           width: 100%;
           height: 100%;
           object-fit: cover;
           object-position: center center;
         }
-        .photo-info {
+        &-info {
           display: flex;
           align-items: center;
+          justify-content: space-between;
           padding-left: 20px;
           bottom: 0;
           position: absolute;
           width: 100%;
           height: 55px;
-          gap: 10px;
           background: rgba(0, 0, 0, .6);
-          a {
-            text-decoration: none;
 
-            img {
-              width: 40px;
-              height: 40px;
-              border-radius: 100%;
+          .data {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            a {
+              text-decoration: none;
+
+              img {
+                width: 40px;
+                height: 40px;
+                border-radius: 100%;
+              }
+            }
+          }
+          button {
+            cursor: pointer;
+            margin-right: 20px;
+            border: 0;
+            background: transparent;
+            svg {
+              fill: #fff;
             }
           }
         }

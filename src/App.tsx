@@ -16,6 +16,7 @@ function App() {
   const [newImages, setNewImages] = useState(false)
   const mounted = useRef(false)
 
+
   const fetchImages = () => {
     setLoading(true)
     let url;
@@ -49,6 +50,7 @@ function App() {
   }
 
   const handleSubmit = (e: React.MouseEvent<HTMLElement>) => {
+    setPhotos([])
     e.preventDefault()
     if (!query) return
     if (page === 1) {
