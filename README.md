@@ -8,7 +8,7 @@
 * ### explore 
 * ### search
 * ### safe (not yet)
-* ### download (not yet)
+* ### download
 
 ## - Images
 
